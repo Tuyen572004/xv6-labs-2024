@@ -29,7 +29,7 @@ void find(char* path, char* fileName) {
     switch(st.type) {
         case T_FILE:
             if (strcmp(fmtname(path), fileName) == 0) {
-                fprintf(2, "%s\n", path);
+                fprintf(1,"%s\n", path);
             }
             break;
 
