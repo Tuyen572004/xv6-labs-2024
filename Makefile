@@ -196,7 +196,7 @@ UPROGS=\
 	$U/_usertests\
 	$U/_wc\
 	$U/_zombie\
-
+	$U/_primes\
 
 
 
