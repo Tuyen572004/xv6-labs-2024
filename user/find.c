@@ -17,25 +17,25 @@ void find(char* path, char* fileName) {
     struct stat st;
 
     if ((fd = open(path, O_RDONLY)) < 0) {
-        fprintf(3, "find: cannot open %s\n", path);
+        fprintf(2, "find: cannot open %s\n", path);
         return;
     }
 
     if (fstat(fd, &st) < 0) {
-        fprintf(3, "find: cannot stat %s\n", path);
+        fprintf(2, "find: cannot stat %s\n", path);
         return;
     }
 
     switch(st.type) {
         case T_FILE:
             if (strcmp(fmtname(path), fileName) == 0) {
-                fprintf(1,"%s\n", path);
+                fprintf(1, "%s\n", path);
             }
             break;
 
         case T_DIR:
             if (strlen(path) + 1 + DIRSIZ + 1 > sizeof(buf)) {
-                fprintf(3, "find: path too long\n");
+                fprintf(2, "find: path too long\n");
                 break;
             }
 
