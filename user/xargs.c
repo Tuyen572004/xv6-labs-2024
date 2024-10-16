@@ -1,13 +1,13 @@
 #include "kernel/types.h"
-#include "user/user.h"
+#include "kernel/stat.h"
 #include "kernel/param.h"
+#include "user/user.h"
 
-#define MAXCHAR 1000
+#define MAXBUF 100
 
-char *readLine()
-{
+char* readLine() {
     // read each character until '\n' is found
-    int size = MAXCHAR;
+    int size = MAXBUF;
 
     char c;
     char *line = (char *)malloc(size);
@@ -37,66 +37,48 @@ char *readLine()
     }
     line[index] = '\0';
     return line;
+
 }
 
-void xargs(int argc, char *argv[])
-{
-    // read each line
-    // append the line to the command
-    // run command with each line
-    if (argc < 2)
-    {
-        fprintf(2, "Usage: xargs command\n");
-        exit(1);
-    }
-
-    // init argv with the initial values are arguments of xargs from 2 to argc-1
+void xargs(int argc, char* argv[]) {
     char *childArgv[MAXARG] = {0};
     int childArgc = 0;
 
-    for (int i = 1; i < argc; i++)
-    {
+    // initialize childArgv : copy all arguments except the first one
+    for (int i = 1; i < argc; i++) {
         childArgv[childArgc++] = argv[i];
     }
 
-    // read line from standard input
     char *line = 0;
 
-    while (1)
-    {
+    while (1) {
 
         line = readLine();
-        if (line[0] == '\0')
-        {
+
+        if (line[0] == '\0') { // have read all lines
             break;
         }
-        // append the line to the command
-        childArgv[childArgc++] = line;
-        printf("line: %s\n", line);
-        for(int i = 0; i < childArgc; i++){
-            printf("childArgv[%d]: %s\n", i, childArgv[i]);
-        }
+ 
+        childArgv[childArgc] = line; // append the line to the arguments
 
-        // run command with each line
         int pid = fork();
-        if (pid == 0)
-        {
+        if (pid == 0) {
             exec(childArgv[0], childArgv);
-            free(line);
-            line = 0;
-            fprintf(2, "child : exec %s failed\n", childArgv[0]);
-            exit(1);
-            
-        }
-        else
-        {
+            // If exec returns, there was an error
+            fprintf(2, "xargs: exec %s failed\n", childArgv[0]);
+            exit(2); // Exit with an error status : error in child process
+        } else {
             wait(0);
         }
+
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fprintf(2, "Usage: %s <command> <args>\n", argv[0]);
+        exit(1); // Exit with an error status if usage is incorrect
+    }
     xargs(argc, argv);
-    return 0;
+    return 0; 
 }

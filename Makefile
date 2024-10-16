@@ -180,18 +180,20 @@ mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 UPROGS=\
 	$U/_cat\
 	$U/_echo\
+	$U/_find\
 	$U/_forktest\
 	$U/_grep\
+	$U/_grind\
 	$U/_init\
 	$U/_kill\
 	$U/_ln\
 	$U/_ls\
 	$U/_mkdir\
+	$U/_pingpong\
 	$U/_rm\
 	$U/_sh\
 	$U/_stressfs\
 	$U/_usertests\
-	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
 	$U/_xargs\
