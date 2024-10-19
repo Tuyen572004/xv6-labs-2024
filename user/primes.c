@@ -1,23 +1,20 @@
 #include "kernel/types.h"
 #include "user/user.h"
 
-void
-close_pipe(int *p) {
+void close_pipe(int *p) {
   close(p[0]);
   close(p[1]);
 }
 
-void
-primes() {
+void primes() {
   int n, p, len;
   int fd[2];
 
-  // read from prev progress 
   if ((len = read(0, &n, sizeof(int))) <= 0 || n <= 0) {
     close(1);
     exit(0);
   }
-  // write first prime to console
+
   printf("prime %d\n", n);
   
   pipe(fd);
@@ -57,7 +54,7 @@ main(void) {
     close(1);
     dup(fd[1]);
     close_pipe(fd);
-    for (i = 2; i <= 35; i++) {
+    for (i = 2; i <= 280; i++) {
       write(1, &i, sizeof(int));
     }
     close(1);
