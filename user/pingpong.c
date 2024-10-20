@@ -14,7 +14,7 @@ int main(void) {
         close(p2c[1]);
 
         read(p2c[0], &buf, 1);
-        fprintf(1, "%d received ping\n", getpid());
+        fprintf(1, "%d: received ping\n", getpid());
         write(c2p[1], &msg, 1);
 
         close(c2p[1]);
@@ -26,7 +26,7 @@ int main(void) {
 
         write(p2c[1], &msg, 1);
         read(c2p[0], &buf, 1);
-        fprintf(1, "%d received pong\n", getpid());
+        fprintf(1, "%d: received pong\n", getpid());
 
         close(c2p[0]);
         close(p2c[1]);
