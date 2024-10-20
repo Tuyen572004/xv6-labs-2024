@@ -197,6 +197,7 @@ UPROGS=\
 	$U/_primes\
 	$U/_wc\
 	$U/_zombie\
+	$U/_xargs\
 
 
 
