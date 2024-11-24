@@ -91,3 +91,17 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// this function used to trace the system call based on bits in mask 
+// if the bit is 1 then the system call is traced
+uint64
+sys_trace(void)
+{
+  int trace_mask=0;
+  // get trace_mask from trap frame
+  argint(0, &trace_mask);
+  struct proc *p = myproc(); // get current process
+  p->trace_mask = trace_mask;     // set mask for current process
+  return 0;
+}
