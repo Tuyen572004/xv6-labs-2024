@@ -5,6 +5,10 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
+
+uint64_t get_freemem(void);
+uint64_t get_nproc(void);
 
 uint64
 sys_exit(void)
@@ -104,4 +108,21 @@ sys_trace(void)
   struct proc *p = myproc(); // get current process
   p->trace_mask = trace_mask;     // set mask for current process
   return 0;
+}
+
+uint64 sys_sysinfo(void) {
+    struct sysinfo *info;
+    // Lấy địa chỉ của tham số đầu vào từ user space
+    argaddr(0, (uint64_t*)&info);
+
+    // Lấy thông tin hệ thống
+    info->freemem = get_freemem();
+    info->nproc = get_nproc();
+
+    // Sao chép thông tin từ kernel sang user space
+    if (copyout(myproc()->pagetable, (uint64_t)info, (char*)info, sizeof(struct sysinfo)) < 0) {
+        return -1; // Nếu copyout thất bại, trả về lỗi
+    }
+
+    return 0; // Thành công
 }
