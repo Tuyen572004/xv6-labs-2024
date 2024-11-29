@@ -1,0 +1,22 @@
+- Câu 1: Nhìn vào kết quả backtrace hàm nào đã gọi syscall?
+=> usertrap() at kernel/trap.c:67
+
+- Câu 2: Giá trị của p->trapframe->a7 là gì và giá trị đó đại diện cho điều gì?
+=> p->trapfram->a7 = 0x7 và giá trị này đại diện cho mã system call
+(xác định chức năng mà chương trình cần thực hiện, cụ thể các chức năng nằm trong file syscall.h)
+
+- Câu 3: Chế độ trước đó của CPU là gì?
+=> user mode vì với $sstatus = 0x200000022 (thì ta thấy được SSP = 0)
+
+- Câu 4: Ghi lại lệnh assembly mà kernel đang gặp sự cố tại đó.
+Thanh ghi nào tương ứng với biến num
+=> Lệnh assembly: lw s2,0(zero)
+=> Thanh ghi s2 tương ứng với biến num
+
+- Câu 5: Tại sao kernel lại crash?
+=> lệnh ở câu 4 cố gắng truy cập vào địa chỉ 0 (không địa ánh xạ trong không gian địa chỉ)
+nên dẫn đến kernel panic, cụ thể scause = 0xd biểu thị rằng gặp một lệnh truy cập bộ nhớ không
+hợp lệ
+
+- Câu 6: Tên của file thực thi nào đang chạy khi kernel gặp sự cố. PID của nó là gì?
+=> Tên: initcode, pid: 1
