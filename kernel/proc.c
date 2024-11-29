@@ -695,3 +695,24 @@ procdump(void)
     printf("\n");
   }
 }
+
+
+struct {
+    struct spinlock lock; 
+    struct proc proc[NPROC];  
+} ptable;
+
+int get_nproc(void) {
+    struct proc *p;
+    int count = 0;
+
+    acquire(&ptable.lock);  // Khoá bảng tiến trình để bảo vệ truy cập đồng thời
+    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+        if (p->state != UNUSED) {
+            count++;
+        }
+    }
+    release(&ptable.lock);  // Giải phóng khoá
+
+    return count;
+}

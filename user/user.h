@@ -1,4 +1,6 @@
 struct stat;
+struct sysinfo;
+typedef unsigned int uint;
 
 // system calls
 int fork(void);
@@ -24,6 +26,7 @@ int sleep(int);
 int uptime(void);
 
 int trace(int);
+int sysinfo(struct sysinfo *);
 
 // ulib.c
 int stat(const char*, struct stat*);
