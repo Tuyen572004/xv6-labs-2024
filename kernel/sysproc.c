@@ -111,18 +111,19 @@ sys_trace(void)
 }
 
 uint64 sys_sysinfo(void) {
-    struct sysinfo *info;
-    // Lấy địa chỉ của tham số đầu vào từ user space
-    argaddr(0, (uint64_t*)&info);
+    struct sysinfo info;
+    info.freemem = get_freemem();
+    info.nproc = get_nproc();
 
-    // Lấy thông tin hệ thống
-    info->freemem = get_freemem();
-    info->nproc = get_nproc();
-
-    // Sao chép thông tin từ kernel sang user space
-    if (copyout(myproc()->pagetable, (uint64_t)info, (char*)info, sizeof(struct sysinfo)) < 0) {
-        return -1; // Nếu copyout thất bại, trả về lỗi
+    uint64 addr;
+    argaddr(0, &addr); // Lấy địa chỉ struct từ user space
+    // Kiểm tra địa chỉ trước khi copyout
+    if (addr == 0 || addr >= myproc()->sz) {
+        return -1;
     }
 
-    return 0; // Thành công
+    if (copyout(myproc()->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+        return -1;
+
+    return 0;
 }
